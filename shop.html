@@ -16,10 +16,10 @@
                     <h1>Shop</h1>
                 </div>
                 <div class="col-4 text-center">
-                    <h1>Cart</h1>
+                    <a href="cart.html"><h1>Cart</h1></a>
                 </div>
                 <div class="col-4 text-center">
-                    <h1>Orders</h1>
+                    <a href="orders.html"><h1>Orders</h1></a>
                 </div>
             </div>
 
@@ -42,21 +42,27 @@
 
 
             <div class="row" v-if="what_to_show === 'products'">
-                <div class="col-12 text-center py-1" v-for="product in products">
+                <div class="col-12 text-center py-1" v-for="i in products.length">
                     <div class="row">
                         <div class="col-3">
-                            <img :src="product['photo']" height="150" width="150">
+                            <img :src="products[i - 1]['photo']" height="150" width="150">
                         </div>
                         <div class="col-3">
-                            <h3>{{ product['name'] }}</h3>
+                            <h3>{{ products[i - 1]['name'] }}</h3>
                         </div>
                         <div class="col-3">
-                            <h3>{{ product['cost'] }}</h3>
+                            <h3>{{ products[i - 1]['cost'] }}</h3>
                         </div>
-                        <div class="col-3">
-                            <button class="btn btn-primary btn-lg" @click="">Add to cart</button>
+                        <div class="col-1">
+                            <input v-model="quantity[i - 1]" class="input-group-text">
+                        </div>
+                        <div class="col-2">
+                            <button class="btn btn-primary btn-lg" @click="add_item_to_cart(products[i - 1]['product_id'], quantity[i - 1])">
+                                Add to cart
+                            </button>
                         </div>
                     </div>
+                    <hr>
                 </div>
                 <div class="col-12 text-center py-1">
                     <button class="btn btn-danger btn-lg" @click="what_to_show = 'subcategories'">Back</button>
