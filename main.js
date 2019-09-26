@@ -1,7 +1,7 @@
 var app = new Vue({
     el: '#app',
     data: {
-        user_code: 320400377,
+        user_code: 320400378,
         client_type: 'telegram', 
 
         cart_id: null,
@@ -14,10 +14,12 @@ var app = new Vue({
         products: null,
         what_to_show: "categories",
 
-        quantity: [],
         add_item_to_cart_url: "http://localhost:8080/add_item_to_cart",
 
+        cart_items: [],
+        get_cart_items_url: "http://localhost:8080/get_cart_items",
 
+        delete_item_from_cart_url: "http://localhost:8080/delete_item_from_cart",
     },
 
     methods: {
@@ -48,11 +50,22 @@ var app = new Vue({
                                                 "quantity": quantity, 
                                                 "cart_id": this.cart_id})
             .then(response => console.log(response.data));
+            alert("Товар добавлен");
+        },
+        get_cart_items: async function() {
+            await axios.post(this.get_cart_items_url, {"cart_id": this.cart_id})
+            .then(response => this.cart_items = response.data);
+        },
+        delete_item_from_cart: async function(cart_id, product_id) {
+            await axios.post(this.delete_item_from_cart_url, {"cart_id": cart_id, "product_id": product_id})
+            .then(response => console.log(response.data));
+            location.reload(true);
         }
     },
 
     created: async function() {
         await this.get_categories();
         await this.get_cart_id()
+        await this.get_cart_items()
     }
   })
