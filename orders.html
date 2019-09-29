@@ -22,6 +22,71 @@
                     <h1>Orders</h1>
                 </div>
             </div>
+
+
+            <div class="row" v-if="!show_more">
+                <div class="col">
+                    <div class="row">
+                        <div class="col text-center">
+                            <h3>ID</h3>
+                        </div>
+                        <div class="col text-center">
+                            <h3>Time create</h3>
+                        </div>
+                        <div class="col text-center">
+                            <h3>Order time</h3>
+                        </div>
+                        <div class="col text-center">
+                            <h3>More</h3>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row py-3" v-for="order in orders">
+                        <div class="col text-center">
+                            <h4>{{ order['order_id'] }}</h4>
+                        </div>
+                        <div class="col text-center">
+                            <h4>{{ order['tms_create'] }}</h4>
+                        </div>
+                        <div class="col text-center">
+                            <h4>{{ order['order_time'] }}</h4>
+                        </div>
+                        <div class="col text-center">
+                            <button class="btn btn-primary" @click="show_order(order['cart_id'])">
+                                More
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+            
+
+            <div v-if="show_more">
+                <div class="row">
+                    <div class="col text-center">
+                        <h3>Name</h3>
+                    </div>
+                    <div class="col text-center">
+                        <h3>Qantity</h3>
+                    </div>
+                </div>
+                <hr>
+                <div class="row py-2" v-for="item in cart_items">
+                    <div class="col text-center">
+                        <h4>{{ item['name'] }}</h4>
+                    </div>
+                    <div class="col text-center">
+                        <h4>{{ item['quantity'] }}</h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-danger btn-lg" @click="show_more = !show_more">Back</button>
+                    </div>
+                </div>
+            </div>
         </div>
  
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

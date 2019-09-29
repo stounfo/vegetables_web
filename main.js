@@ -5,6 +5,7 @@ var app = new Vue({
         client_type: 'web', 
 
         show_items: true,
+        show_more: false,
 
         cart_id: null,
         get_cart_id_url: "http://localhost:8080/get_cart_id", 
@@ -29,6 +30,9 @@ var app = new Vue({
         add_user_info_url: "http://localhost:8080/add_user_info",
 
         add_order_url: "http://localhost:8080/add_order",
+
+        orders: null,
+        get_orders_url: "http://localhost:8080/get_orders",
     },
 
     methods: {
@@ -61,8 +65,8 @@ var app = new Vue({
             .then(response => console.log(response.data));
             alert("Товар добавлен");
         },
-        get_cart_items: async function() {
-            await axios.post(this.get_cart_items_url, {"cart_id": this.cart_id})
+        get_cart_items: async function(cart_id) {
+            await axios.post(this.get_cart_items_url, {"cart_id": cart_id})
             .then(response => this.cart_items = response.data);
         },
         delete_item_from_cart: async function(cart_id, product_id) {
@@ -77,7 +81,6 @@ var app = new Vue({
             this.show_items = !this.show_items
         },
         buy: async function() {
-            console.log(this.user_info)
             await axios.post(this.add_user_info_url, Object.assign({}, this.user_info, {'user_code': this.user_code, 'client_type': this.client_type}))
             .then(response => console.log(response.data));
 
@@ -86,11 +89,20 @@ var app = new Vue({
 
             location.reload(true);
         },
+        get_orders: async function() {
+            await axios.post(this.get_orders_url, {'user_code': this.user_code, 'client_type': this.client_type})
+            .then(response => this.orders = response.data);
+        },
+        show_order: async function(cart_id) {
+            await this.get_cart_items(cart_id);
+            this.show_more = !this.show_more;
+        },
     },
 
     created: async function() {
         await this.get_categories();
         await this.get_cart_id()
-        await this.get_cart_items()
+        await this.get_cart_items(this.cart_id)
+        await this.get_orders()
     }
   })
