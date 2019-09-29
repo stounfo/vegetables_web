@@ -1,8 +1,10 @@
 var app = new Vue({
     el: '#app',
     data: {
-        user_code: 320400378,
-        client_type: 'telegram', 
+        user_code: 320400377,
+        client_type: 'web', 
+
+        show_items: true,
 
         cart_id: null,
         get_cart_id_url: "http://localhost:8080/get_cart_id", 
@@ -20,6 +22,13 @@ var app = new Vue({
         get_cart_items_url: "http://localhost:8080/get_cart_items",
 
         delete_item_from_cart_url: "http://localhost:8080/delete_item_from_cart",
+
+        user_info: null,
+        order_time: null,
+        get_user_info_url: "http://localhost:8080/get_user_info",
+        add_user_info_url: "http://localhost:8080/add_user_info",
+
+        add_order_url: "http://localhost:8080/add_order",
     },
 
     methods: {
@@ -60,7 +69,23 @@ var app = new Vue({
             await axios.post(this.delete_item_from_cart_url, {"cart_id": cart_id, "product_id": product_id})
             .then(response => console.log(response.data));
             location.reload(true);
-        }
+        },
+        click_on_buy: async function() {
+            await axios.post(this.get_user_info_url, {"user_code": this.user_code, "client_type": this.client_type})
+            .then(response => this.user_info = response.data)
+
+            this.show_items = !this.show_items
+        },
+        buy: async function() {
+            console.log(this.user_info)
+            await axios.post(this.add_user_info_url, Object.assign({}, this.user_info, {'user_code': this.user_code, 'client_type': this.client_type}))
+            .then(response => console.log(response.data));
+
+            await axios.post(this.add_order_url, {"cart_id": this.cart_id, "order_time": this.order_time})
+            .then(response => console.log(response.data));
+
+            location.reload(true);
+        },
     },
 
     created: async function() {
