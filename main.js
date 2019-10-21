@@ -85,6 +85,9 @@ var app = new Vue({
             this.show_items = !this.show_items
         },
         buy: async function() {
+            console.log(Object.assign({}, this.user_info, {'user_code': this.user_code,
+                                                            'client_type': this.client_type,
+                                                            "order_time": this.order_time}))
             await axios.post(this.add_order_url, Object.assign({}, this.user_info, {'user_code': this.user_code,
                                                                                     'client_type': this.client_type,
                                                                                     "order_time": this.order_time}))
